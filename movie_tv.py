@@ -1,22 +1,12 @@
 import streamlit as st
-from pyspark.sql import SparkSession
 import pandas as pd
 
-# Initialize Spark
-spark = SparkSession.builder.appName("TMDB Dashboard").getOrCreate()
+# Load datasets using Pandas (Streamlit Cloud compatible)
+movies = pd.read_csv("top_rated_movies.csv")
+tv = pd.read_csv("top_rated_tv.csv")
 
-# Load datasets using PySpark
-movies_sdf = spark.read.csv("top_rated_movies.csv", header=True, inferSchema=True)
-tv_sdf = spark.read.csv("top_rated_tv.csv", header=True, inferSchema=True)
-
-# Convert to Pandas for Streamlit rendering
-movies = movies_sdf.toPandas()
-tv = tv_sdf.toPandas()
-
-# Streamlit UI setup
 st.set_page_config(page_title="TMDB Insights", layout="wide")
-st.title("🎬 TMDB Insights Dashboard")
-
+st.title("🎬 MOVIES TV SHOWS LIST")
 # Sidebar filters
 dataset = st.sidebar.radio("Choose Dataset", ["Movies", "TV Shows"])
 min_rating = st.sidebar.slider("Minimum Rating", 0.0, 10.0, 7.0)
@@ -61,3 +51,4 @@ else:
 # Footer
 st.markdown("---")
 st.caption("Built with ❤️ using PySpark + Streamlit | © Anurag")
+
